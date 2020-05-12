@@ -5,17 +5,21 @@ library(gapminder)
 library(gganimate)
 library(gifski)
 library(av)
+library(extrafont)
+loadfonts(device = 'win')
 
 f_planent_orbits <- function(inner_planet,
                              outer_planet,
-                             file_name,
+                             file_name = NULL,
                              format = 'gif',
-                             years = 1,
+                             years = 5,
                              duration = 10,
-                             fps = 50,
+                             fps = 20,
                              scale = 1,
                              background_color = 'black',
                              line_color = 'white'){
+
+    if (is.null(file_name)) { file_name <-  paste0(inner_planet,' v. ',outer_planet) }
 
     planet_orbits_par <-  data.frame(planet = c('Mercury','Venus','Earth','Mars','Jupiter','Saturn','Uranus','Neptune'),
                                      a = c(57.9,108,150,228,779,1430,2870,4500),
@@ -45,8 +49,11 @@ f_planent_orbits <- function(inner_planet,
                                    yend = youter,
                                    group = seq_along(time)),
                      color = line_color, size = 0.01,linetype = 'dotted') +
+        ggtitle(paste0(inner_planet,' v. ',outer_planet,'\n\n')) +
         theme_void() +
-        theme(panel.background = element_rect(fill = background_color)) +
+        theme(panel.background = element_rect(fill = background_color),
+              plot.background = element_rect(fill = background_color),
+              plot.title = element_text(hjust = 0.5,face = 'bold',color = line_color, size = 16,family = 'Century Gothic')) +
         transition_reveal(time) +
         NULL
 
@@ -68,13 +75,50 @@ f_planent_orbits <- function(inner_planet,
 
 # Test
 
-f_planent_orbits(inner_planet = 'Mercury',
-                 outer_planet = 'Venus',
-                 file_name = 'Mercury v. Venus',
-                 format = 'gif',
-                 years = 10,
-                 duration = 10,
-                 fps = 50,
-                 scale = 1.4,
-                 background_color = '#00212b',
-                 line_color = '#bde300'  )
+f_planent_orbits(inner_planet = 'Earth',
+                 outer_planet = 'Jupiter',
+                 # file_name = 'Earth v. Jupiter',
+                 # format = 'gif',
+                 # years = 10,
+                 # duration = 15,
+                 # fps = 40,
+                 # scale = 1.5,
+                 # background_color = '#00212b',
+                 # line_color = '#bde300',
+                 NULL)
+
+# Todas las combinaciones
+
+planets <- c('Mercury','Venus','Earth','Mars','Jupiter','Saturn','Uranus','Neptune')
+
+colors <- c('#ffd700','#edfd00','#00ff00','#00ffc5','#ff004d','#00ecff','#ff7400',
+            '#0078ff','#6f00ff','#2f00ff','#bde300','#00ff2b','#ff00f4','#f0ff00',
+            '#ffd700','#edfd00','#00ff00','#00ffc5','#ff004d','#00ecff','#ff7400',
+            '#0078ff','#6f00ff','#2f00ff','#bde300','#00ff2b','#ff00f4','#f0ff00')
+
+k <- 0
+
+for (i in 2:8) {
+    for (j in 1:(i - 1)) {
+
+        .rs.restartR()
+        gc()
+        k <- k + 1
+
+        inner_p <- planets[j]
+        outer_p <- planets[i]
+
+        f_planent_orbits(inner_planet = inner_p,
+                         outer_planet = outer_p,
+                         format = 'gif',
+                         years = 10,
+                         duration = 15,
+                         fps = 40,
+                         scale = 1.5,
+                         background_color = '#00212b',
+                         line_color = colors[k],
+                         NULL)
+
+    }
+}
+
