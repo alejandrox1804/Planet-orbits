@@ -69,12 +69,12 @@ f_planent_orbits <- function(inner_planet,
 # Test
 
 f_planent_orbits(inner_planet = 'Mercury',
-                 outer_planet = 'Neptune',
-                 file_name = 'Mercury v. Neptune',
+                 outer_planet = 'Venus',
+                 file_name = 'Mercury v. Venus',
                  format = 'gif',
                  years = 10,
-                 duration = 15,
-                 fps = 10,
+                 duration = 10,
+                 fps = 50,
                  scale = 1.4,
                  background_color = '#00212b',
                  line_color = '#bde300'  )
